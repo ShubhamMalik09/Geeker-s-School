@@ -3,6 +3,7 @@ const OTP = require("../models/OTP");
 const Profile = require("../models/Profile");
 const otpGenerator = require("otp-generator");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 
 // send OTP
@@ -164,9 +165,31 @@ exports.login = async (req,res) =>{
             const payload ={
                 email:user.email,
                 id:user_id,
-                role:user.rouls=e]]'d
-                                                                                  gd                   '
+                role:user.accountType,
             }
+
+            const token = jwt.sign(payload,process.env.JWT_SECRET,{
+                expiresIn:"2h"
+            });
+            user.token = token;
+            user.password = undefined;
+
+            const options ={
+                expires : new Date(Date.now() + 3*24*60*60*1000)
+            }
+            res.cookie("token",token,option).status(200).json({
+                success:true,
+                token,
+                user,
+                message:"logged in successfully"
+            });
+
+        }
+        else{
+            return res.status(401).json({
+                success:false,
+                message:"Password is incorrect"
+            });
         }
 
 
@@ -174,7 +197,13 @@ exports.login = async (req,res) =>{
         console.log(err);
         return res.status(500).json({
             success:false,
-            message:"user cannot be login. Please try again"
+            message:"Login Failure, Please try again"
         });
     }
+}
+
+
+
+exports.changePassword = async (req,res) =>{
+
 }
