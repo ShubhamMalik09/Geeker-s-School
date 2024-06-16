@@ -6,20 +6,23 @@ const {uploadImageToCloudinary} = require("../utils/imageUploader");
 exports.createCourse = async (req,res) =>{
     try{
         // fetch data
-        const {courseName, courseDescription, whatYouWillLearn, price,category} = req.body;
+        const userId = req.user.id;
+        const {courseName, courseDescription, whatYouWillLearn, price,tag,category,status,instructions} = req.body;
         
         const thumbnail = req.files.thumbnailImage;
 
-        if(!courseName || !courseDescription || !whatYouWillLearn || !price ||!category ||!thumbnail) {
+        if(!courseName || !courseDescription || !whatYouWillLearn || !price || !category || !thumbnail || !tag) {
             return res.status(400).json({
                 success:false,
                 message:"all fields required",
             });
         };
 
-        const userId = req.user.id;
-        const instructorDetails = await User.findById(userId);
+        if (!status || status === undefined) {
+			status = "Draft";
+		}
 
+        const instructorDetails = await User.findById(userId,{accountType:"Instructor"});
         if(!instructorDetails){
             return res.status(400).json({
                 success:false,
@@ -47,8 +50,11 @@ exports.createCourse = async (req,res) =>{
             instructor:instructorDetails._id,
             whatYouWillLearn,
             price,
+            tag: tag,
             category:categoryDetails._id,
-            thumbnail:thumbnailImage.secure_url
+            thumbnail:thumbnailImage.secure_url,
+            status: status,
+			instructions: instructions,
         });
 
         // add the nre course to the user schema of Instructor
@@ -61,8 +67,8 @@ exports.createCourse = async (req,res) =>{
         );
 
         // update the Tag Schema
-        await Tag.findByIdAndUpdate(
-            {_id: categoryDetails._id},
+        await Category.findByIdAndUpdate(
+            {_id: category},
             {$push:{
                 course:newCourse._id,
             }},
@@ -111,3 +117,32 @@ exports.showAllCourse = async (req,res) =>{
         })
     }
 }
+
+exports.getAllCourses = async (req, res) => {
+	try {
+		const allCourses = await Course.find(
+			{},
+			{
+				courseName: true,
+				price: true,
+				thumbnail: true,
+				instructor: true,
+				ratingAndReviews: true,
+				studentsEnroled: true,
+			}
+		)
+			.populate("instructor")
+			.exec();
+		return res.status(200).json({
+			success: true,
+			data: allCourses,
+		});
+	} catch (error) {
+		console.log(error);
+		return res.status(404).json({
+			success: false,
+			message: `Can't Fetch Course Data`,
+			error: error.message,
+		});
+	}
+};

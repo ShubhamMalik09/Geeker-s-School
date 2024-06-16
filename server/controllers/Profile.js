@@ -1,17 +1,11 @@
 const Profile = require("../models/Profile");
 const User = require("../models/User");
+const { uploadImageToCloudinary } = require("../utils/imageUploader");
 
 exports.updateProfile = async (req,res) =>{
     try{
-        const {dateOfBirth="",about="",contactNumber,gender} = req.body;
+        const {dateOfBirth="",about="",contactNumber} = req.body;
         const id = req.user.id;
-
-        if(!contactNumber || !gender || !id){
-            return res.status(400).json({
-                success:false,
-                message:"All fields required"
-            })
-        }
 
         const userDetails = await User.findById(id);
         const profileId = userDetails.additionalDetails;
@@ -20,7 +14,6 @@ exports.updateProfile = async (req,res) =>{
         profileDetails.dateOfBirth = dateOfBirth;
         profileDetails.about = about;
         profileDetails.contactNumber = contactNumber;
-        profileDetails.gender = gender;
 
         await profileDetails.save();
 

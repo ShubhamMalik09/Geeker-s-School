@@ -24,13 +24,14 @@ exports.createSubSection = async (req,res) =>{
             videoURL:uploadDetails.secure_url
         });
 
-        await Section.findByIdAndUpdate({_id:sectionId},
+        const updatedSection = await Section.findByIdAndUpdate({_id:sectionId},
                                         {$push:
                                             {
                                             subSection: newSection._id,
                                             }
                                         },
-                                        {new:true});
+                                        {new:true})
+                                        .populate("subSection");
         return res.status(200).json({
             success:true,
             message:"Sub Section created successfully"

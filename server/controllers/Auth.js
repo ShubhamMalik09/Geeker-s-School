@@ -4,6 +4,9 @@ const Profile = require("../models/Profile");
 const otpGenerator = require("otp-generator");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const mailSender = require("../utils/mailSender");
+const {passwordUpdated} = require("../mail/templates/passwordUpdate");
+require("dotenv").config();
 
 
 // send OTP
@@ -48,7 +51,8 @@ exports.sendOTP = async (req,res) =>{
 
         res.status(200).json({
             success:true,
-            message:"otp Sent successfully"
+            message:"otp Sent successfully",
+            otp,
         })
 
     } catch(err){
@@ -92,12 +96,12 @@ exports.signUp = async (req,res) =>{
         const recentotp = await OTP.find({email}).sort({createdAt:-1}).limit(1);
         console.log(recentotp);
 
-        if(recentotp.length == 0 ){
+        if(recentotp.length === 0 ){
             return res.status(400).json({
                 success:false,
-                message:"Otp cannot found"
+                message:"Otp is not valid"
             }); 
-        } else if(otp !== recentotp.otp){
+        } else if(otp !== recentotp[0].otp){
             return res.status(400).json({
                 success:false,
                 message:"Otp not matching"
@@ -107,11 +111,14 @@ exports.signUp = async (req,res) =>{
         // hash password
         const hashedPassword = await bcrypt.hash(password,10);
 
+        let approved="";
+        approved === "Instructor" ? (approved=false) : (approved=true);
+
         const profileDetails = await Profile.create({
-            gender:null,
-            dateOfBirth:null,
-            about:null,
-            contactNumber:null,
+            gender: null,
+			dateOfBirth: null,
+			about: null,
+			contactNumber: null,
         })
 
         const user = await User.create({
@@ -120,7 +127,8 @@ exports.signUp = async (req,res) =>{
             email,
             contactNumber,
             password:hashedPassword,
-            accountType,
+            accountType: accountType,
+			approved: approved,
             additionalDetails:profileDetails._id,
             image:`http://api.dicebear.com/5.x/bottts/svg?seed=${firstName}`,
         })
@@ -155,7 +163,7 @@ exports.login = async (req,res) =>{
         const user= await User.findOne({email}).populate("additionalDetails");
         if(!user){
             console.log(err);
-            return res.status(500).json({
+            return res.status(401).json({
                 success:false,
                 message:"user not found"
             });
@@ -175,9 +183,10 @@ exports.login = async (req,res) =>{
             user.password = undefined;
 
             const options ={
-                expires : new Date(Date.now() + 3*24*60*60*1000)
+                expires : new Date(Date.now() + 3*24*60*60*1000),
+                httpOnly:true,
             }
-            res.cookie("token",token,option).status(200).json({
+            res.cookie("token",token,options).status(200).json({
                 success:true,
                 token,
                 user,
@@ -205,5 +214,60 @@ exports.login = async (req,res) =>{
 
 
 exports.changePassword = async (req,res) =>{
+    try{
+        const userDetails = await User.findById(req.user.id);
 
+        const {oldPassword, newPassword, confirmNewPassword} = req.body;
+
+        const isPasswordMatch = await bcrypt.compare(oldPassword,userDetails.password);
+        if(!isPasswordMatch){
+            return res.status(400).json({
+                success:false,
+                message:"password is incorrect",
+            });
+        }
+
+        if (newPassword !== confirmNewPassword) {
+			// If new password and confirm new password do not match, return a 400 (Bad Request) error
+			return res.status(400).json({
+				success: false,
+				message: "The password and confirm password does not match",
+			});
+		}
+        const encryptedPassword = await bcrypt.hash(newPassword,10);
+        const updateUserDetails = await User.findByIdAndUpdate(req.user.id,
+                                            {password:encryptedPassword},
+                                            {new:true}
+        );
+
+        try{
+            const emailResponse = await mailSender(
+                updatedUserDetails.email,
+                passwordUpdated(
+                    updateUserDetails.email,
+                    `Password updated successfully for ${updateUserDetails.fistName} ${updateUserDetails.lastName}`
+                )
+            );
+            console.log("email sent successfully:",emailResponse.response);
+        } catch(err){
+            console.error("error occured while sending email: ",error);
+            return res.status(500).json({
+                success:false,
+                message:"Error occured while sending email",
+                error:err.message,
+            })
+        }
+
+        return res
+			.status(200)
+			.json({ success: true, message: "Password updated successfully" });
+
+    } catch(err){
+        console.error("Error occurred while updating password:",error);
+        return res.status(500).json({
+            success:false,
+            message:"Error occurred while updating password",
+            error:err.message,
+        });
+    }
 }

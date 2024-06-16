@@ -47,4 +47,56 @@ exports.showAllCategories = async (req,res) =>{
             message:err.message,
         })
     }
+};
+
+exports.categoryPageDetails = async (req,res) =>{
+    try{
+        const {CategoryId} = req.body;
+        const selectedCategory= await Category.findById(CategoryId)
+                                                .populate("courses")
+                                                .exec();
+        if(!selectedCategory){
+            console.log("Category not found.");
+			return res
+				.status(404)
+				.json({ success: false, message: "Category not found" });
+        }
+
+        if(selectedCategory.courses.length===0){
+            console.log("No courses found for the selected category.");
+			return res.status(404).json({
+				success: false,
+				message: "No courses found for the selected category.",
+			});
+        }
+
+        const selectedCourse = selectedCategory.courses;
+
+        const categoriesExceptSelected = await Category.find(
+            {_id:{$ne:CategoryId},})
+            .populate("courses");
+
+        let differentCourses = [];
+        for(const category of categoriesExceptSelected){
+            differentCourses.push(...category.courses);
+        }
+
+        const allCategories = await Category.find().populate("courses");
+        const allCourses = allCategories.flatMap((category) => category.courses);
+        const mostSellingCourses = allCourses
+                            .sort((a,b) => b.sold - a.sold)
+                            .slice(0,10);
+        
+        res.status(200).json({
+            selectedCourses: selectedCourse,
+            differentCourses: differentCourses,
+            mostSellingCourses: mostSellingCourses,
+        });
+        } catch(err){
+            return res.status(500).json({
+                success: false,
+                message: "Internal server error",
+                error: error.message,
+            });
+    }
 }
