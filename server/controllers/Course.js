@@ -89,7 +89,7 @@ exports.createCourse = async (req,res) =>{
             error:err.message
         })
     }
-}
+};
 
 exports.showAllCourse = async (req,res) =>{
     try{
@@ -116,7 +116,7 @@ exports.showAllCourse = async (req,res) =>{
             error:err.message
         })
     }
-}
+};
 
 exports.getAllCourses = async (req, res) => {
 	try {
@@ -145,4 +145,47 @@ exports.getAllCourses = async (req, res) => {
 			error: error.message,
 		});
 	}
+};
+
+exports.getCourseDetails = async (req,res) =>{
+    try{
+        const {courseId} = req.body;
+
+        const courseDetails = await Course.find(
+                                        {_id:courseId})
+                                        .populate(
+                                            {
+                                                path:"instructor",
+                                                populate:{
+                                                    path:"additionalDetails"
+                                                }
+                                            }
+                                        )
+                                        .populate("category")
+                                        .populate("ratingAndReviews")
+                                        .populate({
+                                            path:"courseContent",
+                                            populate:{
+                                                path:"subSection",
+                                            },
+                                        })
+                                        .exec();
+        if(!courseDetails){
+            return res.status(400).json({
+                success:false,
+                message:`Could not find the course wih ${courseId}`
+            })
+        }
+
+        return res.status(200).json({
+            success:true,
+            message:"Course Details fetched successfully",
+            data:courseDetails,
+        })
+    } catch(err){
+        return res.status(400).json({
+            success:false,
+            message:err.message,
+        })
+    }
 };
