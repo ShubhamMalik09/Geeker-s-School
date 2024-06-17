@@ -76,7 +76,8 @@ exports.isInstructor= async (req,res,next) =>{
 exports.isAdmin= async (req,res,next) =>{
     try{
         // extract token 
-        if(req.user.accountType !="Admin"){
+        console.log(req.user)
+        if(req.user.accountType !=="Admin"){
             return res.status(401).json({
                 success:false,
                 message:"this is protected route for admin only"

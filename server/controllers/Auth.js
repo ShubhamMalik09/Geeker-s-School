@@ -69,7 +69,7 @@ exports.signUp = async (req,res) =>{
     try{
         const {firstName, lastName, email,password,confirmPassword,accountType,contactNumber,otp} = req.body;
 
-        if(!firstName || !lastName || !email || !password || !confirmPassword || !accountType || !contactNumber || !otp){
+        if(!firstName || !lastName || !email || !password || !confirmPassword || !accountType || !otp){
             return res.status(403).json({
                 success:false,
                 message:"All field are required"
@@ -95,7 +95,6 @@ exports.signUp = async (req,res) =>{
         // find most recent otp stored for the user 
         const recentotp = await OTP.find({email}).sort({createdAt:-1}).limit(1);
         console.log(recentotp);
-
         if(recentotp.length === 0 ){
             return res.status(400).json({
                 success:false,
@@ -162,7 +161,6 @@ exports.login = async (req,res) =>{
 
         const user= await User.findOne({email}).populate("additionalDetails");
         if(!user){
-            console.log(err);
             return res.status(401).json({
                 success:false,
                 message:"user not found"
@@ -172,8 +170,8 @@ exports.login = async (req,res) =>{
         if(await bcrypt.compare(password,user.password)){
             const payload ={
                 email:user.email,
-                id:user_id,
-                role:user.accountType,
+                id:user._id,
+                accountType:user.accountType,
             }
 
             const token = jwt.sign(payload,process.env.JWT_SECRET,{

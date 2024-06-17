@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const mailSender = require("../utils/mailSender");
 const bcrypt = require("bcrypt");
+const crypto = require("crypto");
 
 exports.resetPasswordToken = async (req,res) =>{
     try{
@@ -16,8 +17,9 @@ exports.resetPasswordToken = async (req,res) =>{
         }
     
         const token = crypto.randomUUID();
+        console.log(token)
     
-        const updatedDetails = await User.findByIdAndUpdate({email:email},{
+        const updatedDetails = await User.findByIdAndUpdate({_id:user._id},{
             token:token,
             resetPasswordExpires:Date.now() + 5*60*1000.
         },{new:true});
@@ -42,7 +44,6 @@ exports.resetPasswordToken = async (req,res) =>{
 exports.resetPassword= async (req,res) =>{
     try{
         const {password, confirmPassword, token} =req.body;
-
         if(password !== confirmPassword){
             return res.json({
                 success:false,
@@ -50,8 +51,7 @@ exports.resetPassword= async (req,res) =>{
             });
         };
 
-        const userDetails = await User.findOne({token:token});
-
+        const userDetails = await User.findOne({ token:token });
         if(!userDetails){
             return res.json({
                 success:false,
@@ -59,7 +59,7 @@ exports.resetPassword= async (req,res) =>{
             });
         }
 
-        if(userDetails.resetPasswordExpires < Date.now()){
+        if(userDetails.resetPasswordExpires > Date.now()){
             return res.json({
                 success:false,
                 message:"token is expired, please regenerate your token",
@@ -68,8 +68,8 @@ exports.resetPassword= async (req,res) =>{
 
         const hashedPassword = await bcrypt.hash(password,10);
 
-        await User.findByIdAndUpdate(
-            {token :token},
+        await User.findOneAndUpdate(
+            {token:token},
             {password:hashedPassword},
             {new:true}
         )
