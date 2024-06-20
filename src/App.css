@@ -6,20 +6,6 @@ html,body{
   overflow-x: hidden;
 }
 
-body {
-  font-family: 'Raleway', sans-serif;
-  background-image: radial-gradient(circle at center, #899Dc4, #495D84);
-  background-size: cover;
-  background-repeat: no-repeat;
-  height: 100vh;
-  width: 100vw;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: radial-gradient(ellipse at bottom, #1b2735, #090a0f);
-  font-weight: 300;
-}
 .all {
   display: flex;
   perspective: 10px;

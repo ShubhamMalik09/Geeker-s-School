@@ -5,6 +5,7 @@ import HighlightText from '../components/core/HomePage/HighlightText'
 import HoverCategories from '../components/core/HomePage/HoverCategories'
 import CTAButton from '../components/core/HomePage/Button'
 import Banner from "../assets/Images/banner.mp4"
+import CodeBlocks from '../components/core/HomePage/CodeBlocks'
 
 const Home = () => {
   return (
@@ -55,11 +56,64 @@ const Home = () => {
 
       {/* section 2 */}
       <div>
-        <CodeBlocks/>
+        <CodeBlocks position={"lg:flex-row"} heading={
+          <div className='text-4xl font-semibold'>
+            Unlock Your <HighlightText text={"coding potential"} />
+            with our online courses
+          </div>
+        }
+        subheading={
+          "Our courses are designed and taught by industry experts who have years of experience in coding and are passionate about sharing their knowledge with you."
+        }
+        ctabtn1={
+          {
+            btnText:"try it yourself",
+            linkto:"/signup",
+            active:true,
+          }
+        }
+        ctabtn2={
+          {
+            btnText:"learn more",
+            linkto:"/login",
+            active:false,
+          }
+        }
+        codeblock={`<!DOCTYPE html>\n<html>\n<head><title>Example</title><linkrel="stylesheet"href="styles.css">\n</head>\n<body>\n<h1><ahref="/">Header</a>\n</h1>\n<nav><ahref="one/">One</a><ahref="two/">Two</a><ahref="three/">Three</a>\n</nav>`}
+        codeColor={"text-yellow-25"}
+        />
       </div>
 
 
       {/* section 3 */}
+      <div>
+        <CodeBlocks position={"lg:flex-row-reverse"} heading={
+          <div className='text-4xl font-semibold'>
+            Unlock Your <HighlightText text={"coding potential"} />
+            with our online courses
+          </div>
+        }
+        subheading={
+          "Our courses are designed and taught by industry experts who have years of experience in coding and are passionate about sharing their knowledge with you."
+        }
+        ctabtn1={
+          {
+            btnText:"try it yourself",
+            linkto:"/signup",
+            active:true,
+          }
+        }
+        ctabtn2={
+          {
+            btnText:"learn more",
+            linkto:"/login",
+            active:false,
+          }
+        }
+        codeblock={`<!DOCTYPE html>\n<html>\n<head><title>Example</title><linkrel="stylesheet"href="styles.css">\n</head>\n<body>\n<h1><ahref="/">Header</a>\n</h1>\n<nav><ahref="one/">One</a><ahref="two/">Two</a><ahref="three/">Three</a>\n</nav>`}
+        codeColor={"text-yellow-25"}
+        />
+      </div>
 
 
 
