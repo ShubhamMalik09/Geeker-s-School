@@ -16,20 +16,31 @@ const Navbar = () => {
     const {totalItems} = useSelector((state) => state.cart);
     const location = useLocation();
 
-    const {subLinks,setSubLinks} = useState([]);
+    // const [subLinks,setSubLinks] = useState([]);
 
-    const fetchSubLinks = async() =>{
-        try{
-            const result = await apiConnector("GET",categories.CATEGORIES_API);
-            setSubLinks(result.data.data);
-        } catch(err){
-            console.log("could not fetch the category list")
-        }
-    }
+    // const fetchSubLinks = async() =>{
+    //     try{
+    //         const result = await apiConnector("GET",categories.CATEGORIES_API);
+    //         setSubLinks(result.data.data);
+    //     } catch(err){
+    //         console.log("could not fetch the category list")
+    //     }
+    // }
 
-    useEffect(()=> {
-        fetchSubLinks();
-    }, [])
+    // useEffect(()=> {
+    //     fetchSubLinks();
+    // }, [])
+    const subLinks =[
+        {
+            title:"Python",
+            link:"/cateogries/python",
+        },
+        {
+            title:"webdev",
+            link:"/cateogries/webdev",
+        },
+
+    ]
 
     const matchRoute = (route) =>{
 
@@ -60,12 +71,13 @@ const Navbar = () => {
                                         <div className='absolute left-[50%] top-0 h-6 w-6 rotate-45 rounded bg-richblack-5 translate-x-[80%] translate-y-[-45%]'></div>
                                         {
                                             subLinks.length ? (
-                                                    subLinks.map((subLink,index) =>{
+                                                     subLinks.map((subLink,index) => (
                                                         <Link to={`${subLink.link}`} key={index}>
                                                             <p>{subLink.title}</p>
+                                
                                                         </Link>
 
-                                                    })
+                                                     ))
                                             ): (<div></div>)
                                         }
                 
