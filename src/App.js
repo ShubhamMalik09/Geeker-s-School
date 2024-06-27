@@ -7,6 +7,9 @@ import ForgotPassword from './pages/ForgotPassword';
 import OpenRoute from './components/core/Auth/OpenRoute';
 import SignUp from './pages/Signup';
 import Footer from './components/common/Footer';
+import UpdatePassword from './pages/UpdatePassword';
+import VerifyEmail from './pages/VerifyEmail';
+import About from './pages/About';
 
 
 function App() {
@@ -25,7 +28,20 @@ function App() {
                               <Login/>
                             </OpenRoute>
                           }/>
-        <Route path='forgot-password' element={<ForgotPassword/>}/>
+        <Route path='forgot-password' element={
+                                    <OpenRoute>
+                                      <ForgotPassword/>
+                                    </OpenRoute>}/>
+
+        <Route path='update-password/:id' element={
+                                    <OpenRoute>
+                                      <UpdatePassword/>
+                                    </OpenRoute>}/>
+        <Route path='verify-email' element={
+                                    <OpenRoute>
+                                      <VerifyEmail/>
+                                    </OpenRoute>}/>
+        <Route path='about' element={<About/>}/>
       </Routes>
       <Footer/>
     </div>
