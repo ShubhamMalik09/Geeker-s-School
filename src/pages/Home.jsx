@@ -30,7 +30,7 @@ const Home = () => {
           <HighlightText text={"Coding Skills"} />
         </div>
 
-        <div className="w-[90%] text-center text-lg font-bold text-richblack-300 ">
+        <div className=" mt-4 w-[90%] text-center text-lg font-bold text-richblack-300">
           With our coding courses, you can learn at your own pace, form anywhere
           in the world, and get access to a wealth of resources, including
           hands-on projectss, quizzes, and personalized feedback from
