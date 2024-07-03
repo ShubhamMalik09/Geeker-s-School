@@ -7,6 +7,7 @@ import { BiDownArrow } from 'react-icons/bi';
 import { AiOutlinePlus } from 'react-icons/ai';
 import SubSectionModal from './SubSectionModal';
 import { setCourse } from '../../../../../slices/courseSlice';
+import { deleteSubSection } from '../../../../../../server/controllers/SubSection';
 
 const NestedView = ({handleChangeEditSectionName}) => {
 
@@ -26,7 +27,10 @@ const NestedView = ({handleChangeEditSectionName}) => {
             token
         })
         if(result){
-            dispatch(setCourse(result));
+            const updatedCourseContent = course.courseContent.map(
+                                                    (section) => section._id === sectionId ? result: section);
+            const updatedCourse = {...course, courseContent : updatedCourseContent}                                      
+            dispatch(setCourse(updatedCourse));
         }
         setConfirmationModal(null)
     }

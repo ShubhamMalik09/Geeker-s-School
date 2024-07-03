@@ -49,9 +49,10 @@ exports.createSubSection = async (req,res) =>{
 
 exports.updateSubSection = async (req,res) =>{
     try{
-        
+        const updatedSection = await Section.findById(sectionId).populate("subSection");
         return res.status(200).json({
             success:true,
+            data: updatedSection,
             message:"Sub Section updated successfully"
         })
         
@@ -78,8 +79,10 @@ exports.deleteSubSection = async (req,res) =>{
                 message:"SubSection not found",
             })
         }
+        const updatedSection = await Section.findById(sectionId).populate("subSection")
         return res.json({
             success: true,
+            data:updatedSection,
             message: "SubSection deleted successfully",
         })
     } catch(err){
