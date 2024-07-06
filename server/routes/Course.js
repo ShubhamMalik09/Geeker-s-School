@@ -7,6 +7,7 @@ const {createSection, updateSection, deleteSection} = require("../controllers/Se
 const {createSubSection, updateSubSection, deleteSubSection} = require("../controllers/SubSection");
 const {createRating, getAverageRating, getAllRating} = require("../controllers/RatingAndReview");
 const {auth, isInstructor, isStudent, isAdmin} = require("../middleware/auth");
+const {updateCourseProgress} = require("../controllers/CourseProgress")
 
 
 router.post("/createCourse",auth, isInstructor, createCourse);
@@ -26,5 +27,7 @@ router.post("/getCategoryPageDetails", categoryPageDetails);
 router.post("/createRating", auth, isStudent, createRating);
 router.get("/getAverageRating", getAverageRating);
 router.post("/getReviews", getAllRating)
+
+router.post("/updateCourseProgress",auth,isStudent,updateCourseProgress)
 
 module.exports = router;

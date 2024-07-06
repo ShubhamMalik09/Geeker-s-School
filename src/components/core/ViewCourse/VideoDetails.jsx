@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { Player } from 'video-react';
-import '~video-react/dist/video-react.css';
+import 'video-react/dist/video-react.css';
 import {AiFillPlayCircle} from "react-icons/ai"
 
 const VideoDetails = () => {

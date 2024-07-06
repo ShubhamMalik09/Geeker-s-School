@@ -114,11 +114,18 @@ const enrollStudents = async(courses, userId, res) =>{
                     message:"Course not found"
                 })
             }
-            const enrolledStudent = await User.findByIdAndUpdate({_id:userId},{$push:{courses:courseId}},{new:true});
+
+            const courseProgress = await CourseProgress.create({
+                courseId:courseId,
+                userId:userId,
+                completedVideos :[], 
+            })
+
+            const enrolledStudent = await User.findByIdAndUpdate({_id:userId},{$push:{courses:courseId , courseProgress: courseProgress._id}},{new:true});
             const emailResponse = await mailSender(
                 enrollStudents.email,
                 `Successfully enrolled into ${enrolledCourse.courseName}`,
-                courseEnrollmentEmail(enrolledCourse.courseName, `${enrollStudents.firstName}`)
+                courseEnrollmentEmail(enrolledCourse.courseName, `${enrolledStudent.firstName}`)
             )
             console.log("Email sent Successfully",emailResponse.response)
         
