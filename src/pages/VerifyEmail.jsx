@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import OTPInput from 'react-otp-input';
 import { Link, useNavigate} from 'react-router-dom';
-import { sendOtp } from '../services/operations/authAPI';
-import signUp from './Signup';
+import { sendOtp, signUp} from '../services/operations/authAPI';
 import { RxCountdownTimer } from 'react-icons/rx';
 import { BiArrowBack } from 'react-icons/bi';
 
@@ -11,10 +10,11 @@ const VerifyEmail = () => {
     const [otp, setOtp] = useState("");
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const {signUpData,loading} = useSelector((state) => state.auth);
+    const {signupData,loading} = useSelector((state) => state.auth);
+    console.log("signupdata",signupData);
 
     useEffect(()=>{
-        if(signUpData){
+        if(!signupData){
             navigate("/signup");
         }
     })
@@ -27,7 +27,7 @@ const VerifyEmail = () => {
             email,
             password,
             confirmPassword,
-        } = signUpData;
+        } = signupData;
         dispatch(signUp(accountType,
             firstName,
             lastName,
@@ -36,6 +36,7 @@ const VerifyEmail = () => {
             confirmPassword,
             otp,
             navigate));
+            
     }
   return (
     <div className="min-h-[calc(100vh-3.5rem)] grid place-items-center">
@@ -86,7 +87,7 @@ const VerifyEmail = () => {
             </Link>
             <button
               className="flex items-center text-blue-100 gap-x-2"
-              onClick={() => dispatch(sendOtp(signUpData.email))}
+              onClick={() => dispatch(sendOtp(signupData.email))}
             >
               <RxCountdownTimer />
               Resend it

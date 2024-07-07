@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {Swiper, SwiperSlide} from "swiper/react"
 import "swiper/css"
 import "swiper/css/free-mode"
@@ -6,6 +6,7 @@ import "swiper/css/pagination"
 import {Autoplay, FreeMode, Navigation, Pagination} from "swiper"
 import ReactStars from 'react-stars'
 import {ratingEndpoints} from "../../services/api"
+import apiConnector from ""
 
 
 const ReviewSlider = () => {

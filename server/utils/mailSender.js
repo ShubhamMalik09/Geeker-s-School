@@ -20,6 +20,7 @@ const mailSender = async (email,title,body) =>{
         console.log("mail sender info",info.response);
         return info;
     } catch(err){
+        console.log("error in sending mail")
         console.log(err.message);
     }
 };

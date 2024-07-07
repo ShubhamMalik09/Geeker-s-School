@@ -3,22 +3,22 @@ import React from 'react'
 const HoverCategories = () => {
   return (
     <div>
-        <div class="all">
-            <div class="lefter hidden lg:flex">
-                <div class="text">Hosting</div>
+        <div className="all">
+            <div className="lefter hidden lg:flex">
+                <div className="text">Hosting</div>
             </div>
-            <div class="left hidden md:flex">
-                <div class="text">Web Design</div>
+            <div className="left hidden md:flex">
+                <div className="text">Web Design</div>
             </div>
-            <div class="center">
-                <div class="explainer"><span>Categories</span></div>
-                <div class="text">Frontend Development</div>
+            <div className="center">
+                <div className="explainer"><span>Categories</span></div>
+                <div className="text">Frontend Development</div>
             </div>
-            <div class="right hidden md:flex">
-                <div class="text">Backend Development</div>
+            <div className="right hidden md:flex">
+                <div className="text">Backend Development</div>
             </div>
-            <div class="righter">
-                <div class="text">Many More...</div>
+            <div className="righter">
+                <div className="text">Many More...</div>
             </div>
         </div>
         
