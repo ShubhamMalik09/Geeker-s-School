@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import OTPInput from 'react-otp-input';
+import OtpInput from 'react-otp-input';
 import { Link, useNavigate} from 'react-router-dom';
 import { sendOtp, signUp} from '../services/operations/authAPI';
 import { RxCountdownTimer } from 'react-icons/rx';
@@ -53,7 +53,7 @@ const VerifyEmail = () => {
             A verification code has been sent to you. Enter the code below
           </p>
           <form onSubmit={handleVerifyAndSignup}>
-            <OTPInput
+            <OtpInput
               value={otp}
               onChange={setOtp}
               numInputs={6}

@@ -1,37 +1,40 @@
-import React, { useDebugValue, useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useEffect, useState } from "react"
+import { VscAdd } from "react-icons/vsc"
+import { useSelector } from "react-redux"
+import { useNavigate } from "react-router-dom"
 
-const MyCourses = () => {
-    const {token} = useSelector((state) => state.auth);
-    const navigate =useNavigate();
-    const [courses, setCourses] = useState();
+import { fetchInstructorCourses } from "../../../services/operations/courseDetailsAPI"
+import IconBtn from "../../common/IconBtn"
+import CoursesTable from "./InstructorCourses/CourseTable"
 
-    useEffect(() =>{
-        const fetchCourses = async() =>{
-            const result = await fetchInstructorCourses(token);
-            if(result){
-                setCourses(result);
-            }
-        }
-        fetchCourses();
-    },[])
+export default function MyCourses() {
+  const { token } = useSelector((state) => state.auth)
+  const navigate = useNavigate()
+  const [courses, setCourses] = useState([])
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      const result = await fetchInstructorCourses(token)
+      if (result) {
+        setCourses(result)
+      }
+    }
+    fetchCourses()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   return (
-
     <div>
-      <div>
-        <h1>
-            My Courses
-        </h1>
+      <div className="mb-14 flex items-center justify-between">
+        <h1 className="text-3xl font-medium text-richblack-5">My Courses</h1>
         <IconBtn
-            text="Add Course"
-            onClick = {()=> navigate("/dashboard/add-course")}
-        />
+          text="Add Course"
+          onclick={() => navigate("/dashboard/add-course")}
+        >
+          <VscAdd />
+        </IconBtn>
       </div>
-
-      {courses && <CoursesTable courses={courses} setCourses={setCourses}/>}
+      {courses && <CoursesTable courses={courses} setCourses={setCourses} />}
     </div>
   )
 }
-
-export default MyCourses

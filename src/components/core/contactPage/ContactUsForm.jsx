@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 
-import CountryCode from "../../data/countrycode.json"
-import { apiConnector } from "../../services/apiconnector"
-import { contactusEndpoint } from "../../services/api"
+import CountryCode from "../../../data/countrycode.json"
+import { apiConnector } from "../../../services/apiconnector"
+import { contactusEndpoint } from "../../../services/api"
 
 const ContactUsForm = () => {
   const [loading, setLoading] = useState(false)
@@ -58,7 +58,7 @@ const ContactUsForm = () => {
             name="firstname"
             id="firstname"
             placeholder="Enter first name"
-            className="form-style"
+            className="form-style text-richblack-900"
             {...register("firstname", { required: true })}
           />
           {errors.firstname && (
@@ -76,7 +76,7 @@ const ContactUsForm = () => {
             name="lastname"
             id="lastname"
             placeholder="Enter last name"
-            className="form-style"
+            className="form-style text-richblack-900"
             {...register("lastname")}
           />
         </div>
@@ -91,7 +91,7 @@ const ContactUsForm = () => {
           name="email"
           id="email"
           placeholder="Enter email address"
-          className="form-style"
+          className="form-style text-richblack-900"
           {...register("email", { required: true })}
         />
         {errors.email && (
@@ -113,7 +113,7 @@ const ContactUsForm = () => {
               name="firstname"
               id="firstname"
               placeholder="Enter first name"
-              className="form-style"
+              className="form-style text-richblack-900"
               {...register("countrycode", { required: true })}
             >
               {CountryCode.map((ele, i) => {
