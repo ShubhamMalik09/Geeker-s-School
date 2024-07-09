@@ -14,9 +14,10 @@ const IconBtn = ({
         {
             children ? (
                 <>
-                    <span>
+                    <span className={`${outline && "text-yellow-50"}`}>
                         {text}
                     </span>
+                    {children}
                 </>
             ):(text)
         }

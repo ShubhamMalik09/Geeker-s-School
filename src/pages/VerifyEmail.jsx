@@ -11,7 +11,6 @@ const VerifyEmail = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const {signupData,loading} = useSelector((state) => state.auth);
-    console.log("signupdata",signupData);
 
     useEffect(()=>{
         if(!signupData){

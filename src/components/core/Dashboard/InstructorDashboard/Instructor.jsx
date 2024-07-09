@@ -1,5 +1,9 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
+import { getInstructorData } from '../../../../services/operations/profileAPI';
+import { fetchInstructorCourses } from '../../../../services/operations/courseDetailsAPI';
+import InstructorChart from "./InstructorChart"
+import { Link } from 'react-router-dom';
 
 const Instructor = () => {
     const {token} = useSelector((state)=>state.auth);

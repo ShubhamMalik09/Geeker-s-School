@@ -23,6 +23,7 @@ exports.signup = async (req, res) => {
       contactNumber,
       otp,
     } = req.body
+    console.log("tillnoww")
     // Check if All Details are there or not
     if (
       !firstName ||
@@ -71,7 +72,6 @@ exports.signup = async (req, res) => {
         message: "The OTP is not valid",
       })
     }
-
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10)
 
