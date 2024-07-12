@@ -25,6 +25,7 @@ exports.createCourse = async (req, res) => {
     } = req.body
     // Get thumbnail image from request files
     const thumbnail = req.files.thumbnailImage
+  
 
     // Convert the tag and instructions from stringified Array to Array
     const tag = JSON.parse(_tag)
@@ -176,7 +177,7 @@ exports.editCourse = async (req, res) => {
         },
       })
       .populate("category")
-      .populate("ratingAndReviews")
+      .populate("ratingAndReview")
       .populate({
         path: "courseContent",
         populate: {
@@ -232,6 +233,7 @@ exports.getAllCourses = async (req, res) => {
 exports.getCourseDetails = async (req, res) => {
   try {
     const { courseId } = req.body
+    console.log(courseId);
     const courseDetails = await Course.findOne({
       _id: courseId,
     })
@@ -242,7 +244,7 @@ exports.getCourseDetails = async (req, res) => {
         },
       })
       .populate("category")
-      .populate("ratingAndReviews")
+      .populate("ratingAndReview")
       .populate({
         path: "courseContent",
         populate: {
@@ -304,7 +306,7 @@ exports.getFullCourseDetails = async (req, res) => {
         },
       })
       .populate("category")
-      .populate("ratingAndReviews")
+      .populate("ratingAndReview")
       .populate({
         path: "courseContent",
         populate: {
@@ -399,7 +401,7 @@ exports.deleteCourse = async (req, res) => {
     }
 
     // Unenroll students from the course
-    const studentsEnrolled = course.studentsEnroled
+    const studentsEnrolled = course.studentsEnrolled
     for (const studentId of studentsEnrolled) {
       await User.findByIdAndUpdate(studentId, {
         $pull: { courses: courseId },

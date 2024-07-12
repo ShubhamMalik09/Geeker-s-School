@@ -12,10 +12,11 @@ import Error from "./Error"
 const Catalog = () => {
 
   const { loading } = useSelector((state) => state.profile)
-  const { catalogName } = useParams()
+  const { catalogName } = useParams();
   const [active, setActive] = useState(1)
   const [catalogPageData, setCatalogPageData] = useState(null)
   const [categoryId, setCategoryId] = useState("")
+
   // Fetch All Categories
   useEffect(() => {
     ;(async () => {
@@ -23,7 +24,7 @@ const Catalog = () => {
         const res = await apiConnector("GET", categories.CATEGORIES_API)
         const category_id = res?.data?.data?.filter(
           (ct) => ct.name.split(" ").join("-").toLowerCase() === catalogName
-        )[0]._id
+        )[0]._id;
         setCategoryId(category_id)
       } catch (error) {
         console.log("Could not fetch Categories.", error)
@@ -35,6 +36,7 @@ const Catalog = () => {
       ;(async () => {
         try {
           const res = await getCatalogPageData(categoryId)
+          console.log(res);
           setCatalogPageData(res)
         } catch (error) {
           console.log(error)

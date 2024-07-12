@@ -1,34 +1,43 @@
-import React, { useEffect, useState } from 'react'
-import {Swiper, SwiperSlide} from "swiper/react"
+import React, { useEffect, useState } from "react"
+import ReactStars from "react-rating-stars-component"
+// Import Swiper React components
+import { Swiper, SwiperSlide } from "swiper/react"
+
+// Import Swiper styles
 import "swiper/css"
 import "swiper/css/free-mode"
 import "swiper/css/pagination"
 import "../../App.css"
-import {Autoplay, FreeMode, Pagination} from "swiper/modules"
-import ReactStars from 'react-rating-stars-component'
-import {ratingsEndpoints} from "../../services/api"
-import {apiConnector} from "../../services/apiconnector"
+// Icons
 import { FaStar } from "react-icons/fa"
+// Import required modules
+import { Autoplay, FreeMode, Pagination } from "swiper/modules"
 
+// Get apiFunction and the endpoint
+import { apiConnector } from "../../services/apiconnector"
+import { ratingsEndpoints } from "../../services/api"
 
-const ReviewSlider = () => {
+function ReviewSlider() {
+  const [reviews, setReviews] = useState([])
+  const truncateWords = 15
 
-    const [reviews, setReviews] = useState([]);
-    const truncateWords = 15; 
+  useEffect(() => {
+    ;(async () => {
+      const { data } = await apiConnector(
+        "GET",
+        ratingsEndpoints.REVIEWS_DETAILS_API
+      )
+      if (data?.success) {
+        setReviews(data?.data)
+      }
+    })()
+  }, [])
 
+  // console.log(reviews)
 
-    useEffect(() =>{
-        const fetchAllReviews = async() =>{
-            const {data} = await apiConnector("GEt", ratingsEndpoints.REVIEWS_DETAILS_API);
-            if(data?.success){
-                setReviews(data?.data);
-            }
-        }
-        fetchAllReviews();
-    },[])
   return (
     <div className="text-white">
-      <div className="my-[50px] h-[184px] max-w-maxContentTab lg:max-w-maxContent">
+      <div className="my-[50px] h-[184px] w-screen max-w-maxContentTab lg:max-w-maxContent">
         <Swiper
           slidesPerView={4}
           spaceBetween={25}
@@ -45,12 +54,12 @@ const ReviewSlider = () => {
             return (
               <SwiperSlide key={i}>
                 <div className="flex flex-col gap-3 bg-richblack-800 p-3 text-[14px] text-richblack-25">
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-4 flex-wrap">
                     <img
                       src={
                         review?.user?.image
                           ? review?.user?.image
-                          : `https://api.dicebear.com/5.x/initials/svg?seed=${review?.user?.firstName} ${review?.user?.lastName}`
+                          : `https://api.dicebear.com/5.x/bottts/svg?seed=${review?.user?.firstName} ${review?.user?.lastName}`
                       }
                       alt=""
                       className="h-9 w-9 rounded-full object-cover"
@@ -88,6 +97,7 @@ const ReviewSlider = () => {
               </SwiperSlide>
             )
           })}
+          {/* <SwiperSlide>Slide 1</SwiperSlide> */}
         </Swiper>
       </div>
     </div>
@@ -95,4 +105,3 @@ const ReviewSlider = () => {
 }
 
 export default ReviewSlider
- 

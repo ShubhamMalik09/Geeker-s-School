@@ -3,7 +3,7 @@ require("dotenv").config();
 
 exports.auth = async (req,res,next) =>{
     try{
-        // extract token 
+        console.log(req.cookies);
         const token = req.cookies.token || req.body.token || req.header("Authorization").replace("Bearer ","");
         if(!token){
             return res.status(401).json({
@@ -14,7 +14,7 @@ exports.auth = async (req,res,next) =>{
 
         // verify the token
         try{
-            const decode = jwt.verify(token,process.env.JWT_SECRET); 
+            const decode = jwt.verify(token,process.env.JWT_SECRET)
             req.user = decode;
         } catch(error){
             return res.status(401).json({
@@ -22,13 +22,12 @@ exports.auth = async (req,res,next) =>{
                 message:"token is invalid"
             })
         }
-
         next();
-
     } catch(err){
         return res.status(500).json({
             success:false,
-            message:"Something went wrong while validating the token"
+            message:"Something went wrong while validating the token",
+            error:err.message
         })
     }
 }
@@ -36,7 +35,8 @@ exports.auth = async (req,res,next) =>{
 exports.isStudent = async (req,res,next) =>{
     try{
         // extract token 
-        if(req.user.accountType !='Student'){
+
+        if(req.user.role !='Student'){
             return res.status(401).json({
                 success:false,
                 message:"this is protected route for students only"
@@ -55,8 +55,9 @@ exports.isStudent = async (req,res,next) =>{
 
 exports.isInstructor= async (req,res,next) =>{
     try{
-        // extract token 
-        if(req.user.accountType !== "Instructor"){
+        // extract token
+        console.log(req.user);
+        if(req.user.role !== "Instructor"){
             return res.status(401).json({
                 success:false,
                 message:"this is protected route for instructor only"

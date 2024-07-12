@@ -1,6 +1,6 @@
 import { toast } from "react-hot-toast"
 
-import rzpLogo from "../../assets/Logo/rzp_logo.png"
+import rzpLogo from "../../assets/Logo/Logo-Full.png"
 import { resetCart } from "../../slices/cartSlice"
 import { setPaymentLoading } from "../../slices/courseSlice"
 import { apiConnector } from "../apiconnector"
@@ -39,28 +39,27 @@ export async function buyCourse(token, courses, userDetails,navigate,dispatch){
                                         Authorization:`Bearer ${token}`,
                                     }
         )
-
         if(!orderResponse.data.success){
             throw new Error(orderResponse.data.message);
-        }
-
+        };
         const options = {
-            key:process.env.RAZORPAY_KEY,
-            currency: orderResponse.data.message.curreny,
-            amount:`${orderResponse.data.message.amount}`,
-            order_id: orderResponse.data.message.id,
+            key : process.env.RAZORPAY_KEY,
+            currency: orderResponse.data.data.currency,
+            amount:`${orderResponse.data.data.amount}`,
+            order_id: orderResponse.data.data.id,
             name:"Geeker's School",
-            description: 'Thank You for Purchasing the COurse',
+            description: 'Thank You for Purchasing the Course',
             image:rzpLogo,
             prefill: {
                 name: `${userDetails.firstName}`,
                 email: `${userDetails.email}`
             },
             handler: function(response){
-                sendPaymentSuccessEmail(response, orderResponse.data.message.amount, token);
+                sendPaymentSuccessEmail(response, orderResponse.data.amount, token);
                 verifyPayment({...response,courses}, token, navigate, dispatch);
             }
         }
+
 
         const paymentObject = new window.Razorpay(options);
         paymentObject.open();

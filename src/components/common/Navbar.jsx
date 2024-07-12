@@ -33,7 +33,6 @@ const Navbar = () => {
     }, [])
 
     const matchRoute = (route) =>{
-
         return matchPath({path:route}, location.pathname);
     }
   return (

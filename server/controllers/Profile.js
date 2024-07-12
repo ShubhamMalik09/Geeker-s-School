@@ -100,7 +100,7 @@ exports.getAllUserDetails = async (req, res) => {
     const userDetails = await User.findById(id)
       .populate("additionalDetails")
       .exec()
-    console.log(userDetails)
+    console.log("userDetails",userDetails)
     res.status(200).json({
       success: true,
       message: "User Data fetched successfully",
@@ -143,7 +143,7 @@ exports.updateDisplayPicture = async (req, res) => {
   }
 }
 
-exports.getEnrolledCourses = async (req, res) => {
+exports.getEnrolledCourses = async (req,res) => {
   try {
     const userId = req.user.id
     let userDetails = await User.findOne({
@@ -159,7 +159,8 @@ exports.getEnrolledCourses = async (req, res) => {
         },
       })
       .exec()
-    userDetails = userDetails.toObject()
+    userDetails = userDetails.toObject();
+    console.log(userDetails.courses[0].courseContent[0]);
     var SubsectionLength = 0
     for (var i = 0; i < userDetails.courses.length; i++) {
       let totalDurationInSeconds = 0
@@ -214,7 +215,7 @@ exports.instructorDashboard = async (req, res) => {
     const courseDetails = await Course.find({ instructor: req.user.id })
 
     const courseData = courseDetails.map((course) => {
-      const totalStudentsEnrolled = course.studentsEnroled.length
+      const totalStudentsEnrolled = course.studentsEnrolled.length
       const totalAmountGenerated = totalStudentsEnrolled * course.price
 
       // Create a new object with the additional fields
