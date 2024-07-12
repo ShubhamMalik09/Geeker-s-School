@@ -55,7 +55,7 @@ export async function buyCourse(token, courses, userDetails,navigate,dispatch){
                 email: `${userDetails.email}`
             },
             handler: function(response){
-                sendPaymentSuccessEmail(response, orderResponse.data.amount, token);
+                sendPaymentSuccessEmail(response, orderResponse.data.data.amount, token);
                 verifyPayment({...response,courses}, token, navigate, dispatch);
             }
         }
